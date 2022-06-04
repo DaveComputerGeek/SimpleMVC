@@ -82,6 +82,10 @@ class Router
      * - Forces path to have a leading slash.
      * - Forces method to be uppercase.
      * - Forces GET method if invalid provided.
+     * 
+     * @param String $path The path passed by reference.
+     * @param String $method (Optional) The request method passed by reference. (Defaults to GET, POST also supported)
+     * @return null Nothing returned.
      */
     private function housekeeping( String &$path, String &$method = "GET" )
     {
