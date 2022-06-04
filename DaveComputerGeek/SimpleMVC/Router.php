@@ -6,7 +6,7 @@ use DaveComputerGeek\SimpleMVC\Utilities;
 
 class Router
 {
-    private $methods = array( "GET", "POST" );
+    private $methods = array( "GET", "POST", "404" );
     private $maps = array();
 
     /**
@@ -29,6 +29,17 @@ class Router
             "method" => $method,
             "host" => $host,
         );
+    }
+
+    /**
+     * Creates a map as a fallback for requests without a defined map.
+     * 
+     * @param callable $callback The callable callback code.
+     * @return null Nothing returned.
+     */
+    public function _404( callable $callback )
+    {
+        $this->map( "", $callback, "404" );
     }
 
     /**
@@ -69,8 +80,14 @@ class Router
 
         if( ! $resolved_route )
         {
-            echo "Route Not Found";
-            return;
+            $route404 = $this->resolve( '', '404' );
+
+            header( "HTTP/1.0 404 Not Found" );
+            
+            if( ! $route404 )
+                return;
+            
+            $resolved_route = $route404;
         }
 
         call_user_func( $resolved_route['callback'] );
